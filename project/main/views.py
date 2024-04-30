@@ -47,6 +47,7 @@ def update(request, id):
     update_post = Post.objects.get(pk=id)
 
     update_post.title = request.POST['title']
+    update_post.weather = request.POST['weather']
     update_post.writer = request.POST['writer']
     update_post.body = request.POST['body']
     update_post.pub_date = timezone.now()
