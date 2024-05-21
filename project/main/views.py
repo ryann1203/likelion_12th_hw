@@ -91,18 +91,25 @@ def update(request, id):
     return redirect('accounts:login', update_post.id)
 
 def delete(request, id):
-    delete_post = Post.objects.get(pk=id)
-    if delete_post.delete():
-      return redirect('main:secondpage')
-    
-    comment = get_object_or_404(Comment, pk = id)
-    post = comment.post 
+    try:
+        # 먼저 Comment 객체를 시도
+        comment = Comment.objects.get(pk=id)
+        if request.user.is_authenticated and request.user == comment.writer:
+            post_id = comment.post.id
+            comment.delete()
+            return redirect('main:detail', post_id)
+    except Comment.DoesNotExist:
+        # Comment 객체가 없으면 Post 객체 시도
+        try:
+            post = Post.objects.get(pk=id)
+            if request.user.is_authenticated and request.user == post.writer:
+                post.delete()
+                return redirect('main:secondpage')
+        except Post.DoesNotExist:
+            raise Http404("삭제할 객체가 없습니다.")
 
-    if request.user.is_authenticated and request.user == comment.writer:
-        comment.delete()
-        return redirect('main:detail', id=post.id)
-    else:
-        raise Http404("접근 권한이 없습니다.")
+    raise Http404("접근 권한이 없습니다.")
+
     
 def tag_list(request):
     tags = Tag.objects.all()
