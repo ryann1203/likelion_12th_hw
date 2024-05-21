@@ -3,6 +3,8 @@
     <a class="navbar-link" href="{% url 'main:mainpage' %}">DGU_likelion_12th</a> 
     <!-- secondpage 링크 연결 -->
     <a class="navbar-link" href="{% url 'main:secondpage' %}">Second Page</a>
+    <!-- tag-list 링크 연결-->
+    <a class="navbar-link" href="{% url 'main:tag-list' %}">Tag</a>
 
     <div class="nav-right">
         {% if user.is_authenticated %}
