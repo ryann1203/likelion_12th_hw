@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>마이페이지에 오신 것을 환영합니다.</h1>
+
+<h3>당신의 소속 동아리는 {{user.profile.club}}입니다.</h3>
+<h3>당신의 학년은 {{user.profile.grade}}입니다.</h3>
+
+User:{{request.user}} <br>
+UserProfile : {{user.profile}} <br>
+
+<p>팔로워</p>{{ user.profile.followers.count}}명</p>
+<p>팔로잉</p>{{ user.profile.followings.count}}명</p>
+
+{% if request.user != user %}
+    {% if requeset.user.profile in user.profile.followers.all %}
+        <a href="{% url 'users:follow' user.id %}">
+            <button type="button" class="btn btn-outline-info">언팔로우</button>
+        </a>
+    {% else %}
+        <a href="{% url 'users:follow' user.id %}">
+            <button type="button" class="btn btn-info">팔로우</button>
+        </a>
+    {% endif %}
+{% endif %}
+
+<div>
+    {% for post in posts %}
+      <div>
+        <hr/>
+        <h3>{{post.title}}</h3>
+        {{post.writer}} | {{post.weather}} | {{post.pub_date}}<br>
+        {{post.summary}}
+        <a href="{% url 'main:detail' post.id %}">자세히 보기</a>
+        <br>
+      </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}

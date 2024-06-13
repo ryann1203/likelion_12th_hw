@@ -48,13 +48,13 @@ def signup(request):
     return render(request, 'accounts/signup.html')
     
 
-def mypage(request):
-    all_posts = Post.objects.all()
-    user_posts = []
+# def mypage(request):
+#     all_posts = Post.objects.all()
+#     user_posts = []
 
-    # 현재 로그인한 사용자가 작성한 게시글만 user_posts에 추가
-    for post in all_posts:
-        if post.writer == request.user.username:
-            user_posts.append(post)
+#     # 현재 로그인한 사용자가 작성한 게시글만 user_posts에 추가
+#     for post in all_posts:
+#         if post.writer == request.user.username:
+#             user_posts.append(post)
 
-    return render(request, 'accounts/mypage.html', {'posts': user_posts})
+#     return render(request, 'users/mypage.html', {'posts': user_posts})

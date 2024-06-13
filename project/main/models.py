@@ -15,6 +15,8 @@ class Post(models.Model):
     pub_date = models.DateTimeField()
     image = models.ImageField(upload_to = "post/", blank=True, null=True)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
+    like = models.ManyToManyField(User, related_name='likes', blank=True)
+    like_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -27,6 +29,7 @@ class Comment(models.Model):
     pub_date = models.DateTimeField()
     writer = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, null=False, blank=False, on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag, related_name='comments', blank=True)
 
     def __str__(self):
         return self.post.title + " : " + self.content[:20] + " by " + self.writer.profile.nickname

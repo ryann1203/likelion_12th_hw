@@ -12,6 +12,15 @@
         <a href="{% url 'main:detail' p.id %}">자세히 보기</a>
         <br>
         {% endfor %}
+
+        {% for c in comments %}
+        <hr/>
+        <h3>{{c.post.title}}</h3>
+        {{c.post.writer}} | {{c.post.pub_date}}<br>
+        {{c.post.summary}}
+        <a href="{% url 'main:detail' c.post.id %}">자세히 보기</a>
+        <br>
+        {% endfor %}
     </div>
 </div>
 

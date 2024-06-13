@@ -35,8 +35,20 @@ def detail(request, id):
         new_comment.writer = request.user
         new_comment.content = request.POST['content']
         new_comment.pub_date = timezone.now()
-
         new_comment.save()
+        words = new_comment.content.split(' ')
+        tag_list = []
+
+        for w in words:
+            if len(w) > 0:
+                if w[0] == '#':
+                    tag_list.append(w[1:])
+
+        for t in tag_list:
+            tag, boolean = Tag.objects.get_or_create(name=t)
+            new_comment.tags.add(tag.id)
+
+        # new_comment.save()s
         return redirect('main:detail', id)
 
 def edit(request, id):
@@ -83,6 +95,18 @@ def update(request, id):
         update_post.body = request.POST['body']
         update_post.pub_date = timezone.now()
 
+        words = update_post.body.split(' ')
+        tag_list = []
+
+        for w in words:
+            if len(w) > 0:
+                if w[0] == '#':
+                    tag_list.append(w[1:])
+
+        for t in tag_list:
+            tag, boolean = Tag.objects.get_or_create(name=t)
+            update_post.tags.add(tag.id)
+
         if request.FILES.get('image'):
             update_post.image = request.FILES['image']
 
@@ -118,7 +142,21 @@ def tag_list(request):
 def tag_posts(request, tag_id):
     tag = get_object_or_404(Tag, id=tag_id)
     posts = tag.posts.all()
+    comments = tag.comments.all()
     return render(request, 'main/tag-post.html', {
         'tag' : tag,
-        'posts' : posts
+        'posts' : posts,
+        'comments' : comments
     })
+
+def likes(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.like.all():
+        post.like.remove(request.user)
+        post.like_count -= 1
+        post.save()
+    else:
+        post.like.add(request.user)
+        post.like_count += 1
+        post.save()
+    return redirect('main:detail', post.id)
