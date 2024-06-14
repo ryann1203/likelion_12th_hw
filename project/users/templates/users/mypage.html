@@ -4,14 +4,25 @@
 {% block content %}
 <h1>마이페이지에 오신 것을 환영합니다.</h1>
 
-<h3>당신의 소속 동아리는 {{user.profile.club}}입니다.</h3>
-<h3>당신의 학년은 {{user.profile.grade}}입니다.</h3>
+<h3>{{user.username}}의 소속 동아리는 {{user.profile.club}}입니다.</h3>
+<h3>{{user.username}}의 학년은 {{user.profile.grade}}입니다.</h3>
 
-User:{{request.user}} <br>
+User:{{user.username}} <br>
 UserProfile : {{user.profile}} <br>
 
 <p>팔로워</p>{{ user.profile.followers.count}}명</p>
+<ul>
+    {% for follower in followers %}
+    <li><a href="{% url 'users:mypage' follower.user.id %}">{{ follower.user.username }}</a></li>
+    {% endfor %}
+</ul>
+
 <p>팔로잉</p>{{ user.profile.followings.count}}명</p>
+<ul>
+    {% for following in followings %}
+    <li><a href="{% url 'users:mypage' following.user.id %}">{{ following.user.username }}</a></li>
+    {% endfor %}
+</ul>
 
 {% if request.user != user %}
     {% if requeset.user.profile in user.profile.followers.all %}

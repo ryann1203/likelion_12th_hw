@@ -6,8 +6,12 @@ from main.models import Post
 # Create your views here.
 def mypage(request, id):
     user = get_object_or_404(User, pk=id)
+    followers = user.profile.followers.all()
+    followings = user.profile.followings.all()
     context = {
-        'user' : user
+        'user' : user,
+        'followers': followers,
+        'followings': followings
     }
     return render(request, 'users/mypage.html', context)
 
